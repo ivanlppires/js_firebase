@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+
+<body>
+    <h1>USANDO FIREBASE SEM FRAMEWORKS - ON THE NAILS</h1>
+    <button id="Create">CREATE</button>
+    <div id="box"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getDatabase, ref, set, push, get, update, remove, onValue } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDqLwWZS8Jr2U6RzE1mi7JP2-0aQ_TJxbY",
+            authDomain: "meuapp2-72cfa.firebaseapp.com",
+            databaseURL: "https://meuapp2-72cfa-default-rtdb.firebaseio.com",
+            projectId: "meuapp2-72cfa",
+            storageBucket: "meuapp2-72cfa.appspot.com",
+            messagingSenderId: "979861190702",
+            appId: "1:979861190702:web:83280b2d7028c2395447bf"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const box = document.getElementById('box');
+
+        const Create = () => {
+            const createRef = ref(db, 'users');
+            const myName = name();
+            push(createRef, {
+                name: myName,
+                email: myName + '@gmail.com'
+            })
+                .then(() => { })
+                .catch(error => console.log(error));
+
+        }
+        const Read = () => {
+            const readRef = ref(db, 'users');
+            onValue(readRef, snapshot => {
+                box.innerHTML = '';
+                let ul = document.createElement('ul');
+                snapshot.forEach(element => {
+                    let user = element.val();
+                    user.key = element.key;
+                    let li = document.createElement('li');
+                    let bt1 = document.createElement('button');
+                    let bt2 = document.createElement('button');
+                    bt1.className = 'botoes';
+                    bt1.innerHTML = 'Editar';
+                    bt2.innerHTML = 'Excluir';
+                    bt2.className = 'botoes';
+                    bt1.addEventListener('click', () => { Update(user.key) });
+                    bt2.addEventListener('click', () => { Delete(user.key) });
+                    li.innerHTML = user.name + ' - ' + user.email;
+                    li.appendChild(bt1);
+                    li.appendChild(bt2);
+                    ul.appendChild(li);
+                });
+                box.appendChild(ul);
+            });
+        }
+        const Update = (key) => {
+            const refUpdate = ref(db, 'users/' + key);
+            update(refUpdate, {
+                name: 'Novo Nome',
+                email: 'novoemail@gmail.com'
+            }).then(
+                () => { }
+            ).catch(error => console.log(error));
+        }
+        const Delete = (key) => {
+            console.log(key);
+            const refDelete = ref(db, 'users/' + key);
+            remove(refDelete)
+                .then(() => { })
+                .catch(error => console.log(error));
+        }
+
+        document.getElementById('Create').addEventListener('click', Create);
+        Read();
+
+    </script>
+</body>
+
+</html>

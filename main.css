@@ -1,0 +1,13 @@
+li::first-letter{
+    text-transform: capitalize;
+}
+li{
+    padding: 1vw;
+}
+.botoes{
+    background-color: yellow;
+    margin-left:3px;
+}
+.botoes::after{
+    content: " AGORA ";
+}

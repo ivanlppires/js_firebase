@@ -1,1 +1,1 @@
-# js_firebase
+# EXAMPLE OF FIREBASE + PURE JAVASCRIPT
